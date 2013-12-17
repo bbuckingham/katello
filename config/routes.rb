@@ -455,6 +455,9 @@ Katello::Engine.routes.draw do
   end
 
   resources :environments do
+    collection do
+      get :all
+    end
     member do
       get :content_views
     end
