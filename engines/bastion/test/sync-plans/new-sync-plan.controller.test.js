@@ -51,7 +51,6 @@ describe('Controller: NewSyncPlanController', function() {
         $scope.createSyncPlan(syncPlan);
 
         expect($scope.errorMessages.length).toBe(0);
-        expect($scope.successMessages[0]).toBe('success');
         expect($scope.transitionBack).toHaveBeenCalled();
     });
 });

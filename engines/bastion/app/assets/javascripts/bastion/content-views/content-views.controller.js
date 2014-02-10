@@ -37,5 +37,14 @@ angular.module('Bastion.content-views').controller('ContentViewsController',
 
         $scope.table = nutupane.table;
         $scope.removeRow = nutupane.removeRow;
+
+        $scope.$watch('table.rows', function (rows) {
+            angular.forEach(rows, function (row) {
+                if (!row.lastPublished && row.versions.length !== 0) {
+                    row.lastPublished = row.versions[row.versions.length - 1].published;
+                }
+            });
+        });
+
     }]
 );
