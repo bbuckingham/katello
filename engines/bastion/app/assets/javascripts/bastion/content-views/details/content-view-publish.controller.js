@@ -16,6 +16,7 @@
  * @name  Bastion.content-views.controller:ContentViewPublishController
  *
  * @requires $scope
+ * @requires ContentView
  *
  * @description
  *   Provides the functionality specific to ContentViews for use with the Nutupane UI pattern.
@@ -23,14 +24,13 @@
  *   within the table.
  */
 angular.module('Bastion.content-views').controller('ContentViewPublishController',
-    ['$scope', function ($scope) {
+    ['$scope', 'ContentView', function ($scope, ContentView) {
 
         $scope.version = {};
 
         $scope.publish = function (contentView, version) {
-            contentView.$publish(version, function (view) {
-                contentView = view;
-                $scope.transitionTo('content-views.details.versions', {contentViewId: contentView.id});
+            ContentView.publish({id: contentView.id, version: version}, function () {
+                $scope.transitionTo('content-views.details.versions', {contentViewId:  $scope.contentView.id});
             });
         };
 

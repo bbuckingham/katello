@@ -68,6 +68,7 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
       options[:filters] << {:terms => {:product_id => product_ids}}
     end
 
+    options[:filters] << {:term => {:archive => false}}
     options[:filters] << {:term => {:enabled => params[:enabled]}} if params[:enabled]
     options[:filters] << {:term => {:environment_id => params[:environment_id]}} if params[:environment_id]
     options[:filters] << {:term => {:content_view_ids => params[:content_view_id]}} if params[:content_view_id]
@@ -75,7 +76,6 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
 
     @search_service.model = Repository
     repositories, total_count = @search_service.retrieve(params[:search], params[:offset], options)
-
     collection = {
       :results  => repositories,
       :subtotal => total_count,
