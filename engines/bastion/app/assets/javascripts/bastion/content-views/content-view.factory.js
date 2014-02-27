@@ -30,13 +30,9 @@ angular.module('Bastion.content-views').factory('ContentView',
             {
                 query:  {method: 'GET', isArray: false},
                 update: {method: 'PUT'},
-<<<<<<< HEAD
-                publish: {method: 'POST', params: {action: 'publish'}}
-=======
                 publish: {method: 'POST', params: {action: 'publish'}},
                 versions: {method: 'GET', isArray: false, params: {action: 'content_view_versions'}}
                 //puppetModules: {method: 'GET', isArray: false, params: {action: puppet_modules}}
->>>>>>> jsherril/cv-ui
             }
         );
 
