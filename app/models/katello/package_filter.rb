@@ -25,26 +25,26 @@ class PackageFilter < Filter
   # @param repo [Repository] a repository containing packages to filter
   # @return [Array] an array of hashes with MongoDB conditions
   def generate_clauses(repo)
-    pkg_filenames = parameters[:units].map do |unit|
-      next if unit[:name].blank?
+    package_filenames = package_rules.inject([]) do |result, rule|
+      next if rule.name.blank?
 
-      filter = version_filter(unit)
-      Package.search(unit[:name], 0, repo.package_count, [repo.pulp_id],
-                      [:nvrea_sort, "ASC"], :all, 'name', filter).collect(&:filename).compact
+      filter = version_filter(rule)
+      Package.search(rule.name, 0, repo.package_count, [repo.pulp_id],
+                     [:nvrea_sort, "ASC"], :all, 'name', filter).collect(&:filename)
     end
-    pkg_filenames.flatten!
-    pkg_filenames.compact!
+    package_filenames.flatten!
+    package_filenames.compact!
 
-    { 'filename' => { "$in" => pkg_filenames } } unless pkg_filenames.empty?
+    { 'filename' => { "$in" => package_filenames } } unless package_filenames.empty?
   end
 
   protected
 
-  def version_filter(unit)
-    if unit.key?(:version)
-      Util::Package.version_eq_filter(unit[:version])
-    elsif unit.key?(:min_version) || unit.key?(:max_version)
-      Util::Package.version_filter(unit[:min_version], unit[:max_version])
+  def version_filter(rule)
+    if !rule.version.blank?
+      Util::Package.version_eq_filter(rule.version)
+    elsif !rule.min_version.blank? || !rule.max_version.blank?
+      Util::Package.version_filter(rule.min_version, rule.max_version)
     else
       nil
     end
