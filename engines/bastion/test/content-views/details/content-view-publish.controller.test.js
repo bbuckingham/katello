@@ -14,25 +14,24 @@
 describe('Controller: ContentViewPublishController', function() {
     var $scope;
 
-    beforeEach(module('Bastion.content-views', 'Bastion.test-mocks'))
+    beforeEach(module('Bastion.content-views', 'Bastion.test-mocks'));
 
     beforeEach(inject(function($injector) {
         var $controller = $injector.get('$controller'),
             ContentView = $injector.get('MockResource').$new(),
             gettext = $injector.get('gettextMock');
 
+        ContentView.publish = function(options, callback) {  callback() };
         $scope = $injector.get('$rootScope').$new();
 
         $scope.contentView = ContentView.get({id: 1});
-        $scope.contentView.$publish = function(version, callback) {
-            callback.call(this, $scope.contentView);
-        };
 
         spyOn($scope, 'transitionTo');
 
         $controller('ContentViewPublishController', {
             $scope: $scope,
-            gettext: gettext
+            gettext: gettext,
+            ContentView: ContentView
         });
     }));
 
@@ -43,7 +42,8 @@ describe('Controller: ContentViewPublishController', function() {
     it('provides a method to publish a content view version', function() {
         $scope.publish($scope.contentView, $scope.version);
 
-        expect($scope.transitionTo).toHaveBeenCalledWith('content-views.details.versions', {contentViewId: $scope.contentView.id});
+        expect($scope.transitionTo).toHaveBeenCalledWith('content-views.details.versions',
+            {contentViewId: $scope.contentView.id});
     });
 
 });

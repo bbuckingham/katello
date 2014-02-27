@@ -116,6 +116,10 @@ class Repository < Katello::Model
     content_type == PUPPET_TYPE
   end
 
+  def archive?
+    self.environment.nil?
+  end
+
   def yum?
     content_type == YUM_TYPE
   end
@@ -169,7 +173,7 @@ class Repository < Katello::Model
   end
 
   def promoted?
-    if self.environment.library?
+    if self.environment.try(:library?)
       Repository.where(:library_instance_id => self.id).count > 0
     else
       true
