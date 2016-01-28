@@ -143,6 +143,7 @@ module Katello
           options = {}
           options[:upstream_name] = self.docker_upstream_name
           options[:feed] = self.url if self.respond_to?(:url)
+          options[:enable_v1] = false if self.respond_to?(:enable_v1)
           Runcible::Models::DockerImporter.new(options)
         else
           fail _("Unexpected repo type %s") % self.content_type
