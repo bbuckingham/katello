@@ -106,7 +106,6 @@ Katello::Engine.routes.draw do
         end
 
         api_resources :docker_manifests, :only => [:index, :show]
-        api_resources :docker_images, :only => [:index, :show]
         api_resources :docker_tags, :only => [:index, :show] do
           collection do
             get :auto_complete_search
@@ -337,7 +336,6 @@ Katello::Engine.routes.draw do
             get :search, :on => :collection
           end
           api_resources :docker_manifests, :only => [:index, :show]
-          api_resources :docker_images, :only => [:index, :show]
           api_resources :docker_tags, :only => [:index, :show]
 
           api_resources :content_uploads, :controller => :content_uploads, :only => [:create, :destroy, :update]
@@ -349,7 +347,6 @@ Katello::Engine.routes.draw do
             put :remove_packages, :action => :remove_content
             put :remove_puppet_modules, :action => :remove_content
             put :remove_docker_manifests, :action => :remove_content
-            put :remove_docker_images, :action => :remove_content
             put :remove_content
             post :sync
             post :export
