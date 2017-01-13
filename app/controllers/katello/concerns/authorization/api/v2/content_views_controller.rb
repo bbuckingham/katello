@@ -3,12 +3,31 @@ module Katello
     extend ActiveSupport::Concern
 
     included do
+      before_action :authorize_update, :only => [:update]
       before_action :authorize_destroy, :only => [:destroy]
       before_action :authorize_remove_from_environment, :only => [:remove_from_environment]
       before_action :authorize_remove, :only => [:remove]
     end
 
     private
+
+    def authorize_update
+      # does the user have read access to the repositories and/or component ids requested
+      unless params[:repository_ids].blank?
+        return deny_access unless Repository.readable_in_product.where(:id => params[:repository_ids]).count == params[:repository_ids].size
+        #unless Repository.readable.where(:id => params[:repository_ids]).count == params[:repository_ids].size
+        #  deny_access
+        #end
+      end
+      unless params[:component_ids].blank?
+        return deny_access unless ContentView.readable.where(:id => params[:component_ids]).count == params[:component_ids].size
+        #unless ContentView.readable.where(:id => params[:component_ids]).count == params[:component_ids].size
+        #  deny_access
+        #end
+      end
+      #return deny_access unless Repository.readable.where(:id => params[:repository_ids]).count == params[:repository_ids].size
+      #return deny_access unless ContentView.readable.where(:id => params[:component_ids]).count == params[:component_ids].size
+    end
 
     def authorize_destroy
       view = find_content_view_for_authorization

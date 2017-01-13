@@ -419,7 +419,9 @@ module Katello
 
     def filter_by_content_view(query, content_view_id, environment_id, is_available_for)
       if is_available_for
+        #byebug
         params[:library] = true
+        query = query.where(:product_id => Katello::Product.authorized(:view_products))
         sub_query = ContentViewRepository.where(:content_view_id => content_view_id).pluck(:repository_id)
         query = query.where("#{Repository.table_name}.id not in (#{sub_query.join(',')})") unless sub_query.empty?
       elsif environment_id

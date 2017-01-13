@@ -21,6 +21,11 @@ module Katello
     delegate :syncable?, to: :product
 
     module ClassMethods
+      def readable_in_product
+        in_products = Repository.where(:product_id => Katello::Product.authorized(:view_products)).pluck(:id)
+        where("#{self.table_name}.id in (?)", in_products)
+      end
+
       def readable
         in_products = Repository.where(:product_id => Katello::Product.authorized(:view_products)).pluck(:id)
         in_content_views = Repository.joins(:content_view_repositories).where("#{ContentViewRepository.table_name}.content_view_id" => Katello::ContentView.readable).pluck(:id)
