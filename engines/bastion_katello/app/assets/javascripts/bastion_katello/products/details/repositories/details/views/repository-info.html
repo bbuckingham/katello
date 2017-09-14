@@ -20,7 +20,13 @@
       <dt translate>Type</dt>
       <dd>{{ repository.content_type }}</dd>
 
-      <dt ng-show="repository.content_type !== 'docker'" translate>URL</dt>
+    </dl>
+
+    <div class="divider"></div>
+    <h4 translate>Sync Settings</h4>
+    <dl class="dl-horizontal dl-horizontal-left">
+
+      <dt ng-show="repository.content_type !== 'docker'" translate>Upstream URL</dt>
       <dt ng-show="repository.content_type === 'docker'" translate>Registry URL</dt>
       <dd bst-edit-text="repository.url"
           on-save="save(repository)"
